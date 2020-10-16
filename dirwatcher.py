@@ -12,6 +12,7 @@ import os
 import time
 import argparse
 
+
 global_dict = {}
 exit_flag = False
 
@@ -20,28 +21,20 @@ def search_for_magic(filename, start_line, magic_string):
     """magic string"""
     with open(filename) as f:
         file_f = f.readlines()
-        print(file_f)
-
+        line_find = []
         for line_num, line in enumerate(file_f):
+
+            if line_num < start_line:
+                continue
+
+            global_dict[filename] = line_num + 1
             result = line.find(magic_string)
 
             if result != -1:
-                print(line_num + 1)
+                line_find.append(line_num+1)
+        if len(line_find) > 0:
+            logger.info(f"new Magic-string {filename} line {line_find}")
         return
-    #         if:
-    #             ...
-    #             find_line = []
-    #             for num_line, i in enumerate(f):
-    #                 if num_line < start_line:
-    #                     pass
-    #                 else:
-    #                     pass
-    #             if len(find_line) > 0:
-    #                 logging.info(
-    #                     f"New magic-string was found in {filename} on line {find_line}")
-    # except Exception as e:
-    #     logging.info(f"the issue was {e}")
-    # return
 
 
 def watch_directory(path, magic_string, extension, interval):
