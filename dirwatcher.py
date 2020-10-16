@@ -12,6 +12,9 @@ import os
 import time
 import argparse
 
+logging.basicConfig(format='%(asctime)s.%(msecs)03d %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 global_dict = {}
 exit_flag = False
@@ -39,7 +42,21 @@ def search_for_magic(filename, start_line, magic_string):
 
 def watch_directory(path, magic_string, extension, interval):
     """directory create it. (os.makedirs) or (os.path.isdir)"""
-    # Your code here
+    list_file = os.listdir(path)
+    for k in list(global_dict):
+        if k.split('/')[1] not in list_file:
+            logger.info(f"file Deleted {k}")
+            global_dict.pop(k)
+    for _file in list_file:
+        path_file = path + "/" + _file
+
+        if path_file not in global_dict and path_file.endswith(extension):
+            logger.info(f"adding new file {path_file}")
+            global_dict[path_file] = 0
+
+        if path_file.endswith(extension):
+            search_for_magic(path_file, global_dict[path_file], magic_string)
+
     return
 
 
