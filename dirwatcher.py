@@ -66,8 +66,9 @@ def create_parser():
         description="watch directory for file changes")
     parser.add_argument("-e", "--ext", help="extension input")
     parser.add_argument("-d", "--dir", help="directory input")
-    parser.add_argument("-i", "--int", default=1,
-                        help="this is the polling how long we check the directory.")
+    parser.add_argument(
+        "-i", "--int", default=1, help="this is the polling\
+            how long we check the directory.")
     parser.add_argument(
         "-t", "--text", help="this is the magic string search",)
 
@@ -76,7 +77,17 @@ def create_parser():
 
 def signal_handler(sig_num, frame):
     """Use Handling OS signals"""
-    # Your code here
+    """Use Handling OS signals"""
+    logger.warning('Received ' + signal.Signals(sig_num).name)
+    if signal.Signals(sig_num).name == "SIGINT":
+        logger.info('Terminating Dirwatcher')
+
+    if signal.Signals(sig_num).name == "SIGTERM":
+        logger.info('Terminating Dirwatcher os interupt recieved')
+
+    global exit_flag
+    exit_flag = True
+
     return
 
 
