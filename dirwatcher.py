@@ -11,6 +11,8 @@ import logging
 import os
 import time
 import argparse
+from colorama import Fore
+
 
 logging.basicConfig(format='%(asctime)s.%(msecs)03d %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
@@ -77,7 +79,6 @@ def create_parser():
 
 def signal_handler(sig_num, frame):
     """Use Handling OS signals"""
-    """Use Handling OS signals"""
     logger.warning('Received ' + signal.Signals(sig_num).name)
     if signal.Signals(sig_num).name == "SIGINT":
         logger.info('Terminating Dirwatcher')
@@ -93,7 +94,37 @@ def signal_handler(sig_num, frame):
 
 def main(args):
     ns = create_parser().parse_args()
-    search_for_magic("hello.txt", 0, ns.text)
+    # Hook into these two signals from the OS
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    # Now my signal_handler will get called if OS sends
+    # either of these to my process.
+    print(Fore.GREEN+"#############################################################################")
+    print()
+    logging.info("Starting program dirwatcher.py")
+    print()
+    print("#############################################################################")
+    while not exit_flag:
+        try:
+            watch_directory(ns.dir, ns.text, ns.ext, ns.int)
+            pass
+        except Exception as e:
+            # This is an UNHANDLED exception
+            # Log an ERROR level message here
+            logger.error(e)
+            pass
+    print(Fore.RED+"_______________________________________________________________________________")
+    print()
+    logging.info("GoodBye Stopped dirwatcher.py")
+    print()
+    print("_______________________________________________________________________________")
+    # put a sleep inside my while loop so I don't peg the cpu usage at 100%
+    time.sleep(ns.int)
+
+    # final exit point happens here
+    # Log a message that we are shutting down
+    # Include the overall uptime since program start
+    # search_for_magic("hello.txt", 0, ns.text)
     print(ns)
     return
 
