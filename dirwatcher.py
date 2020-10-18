@@ -3,7 +3,7 @@
 Dirwatcher - A long-running program
 """
 
-__author__ = "Manuel velasco"
+__author__ = "Manuel velasco, John(Q3 Tutor) and Peter Mayor"
 
 import sys
 import signal
