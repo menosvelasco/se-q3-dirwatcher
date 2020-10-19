@@ -14,8 +14,9 @@ import argparse
 from colorama import Fore
 
 
-logging.basicConfig(format='%(asctime)s.%(msecs)03d %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+logging.basicConfig(
+    format='%(asctime)s.%(msecs)03d %(name)-12s %(levelname)-8s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 global_dict = {}
@@ -93,17 +94,22 @@ def signal_handler(sig_num, frame):
 
 
 def main(args):
+    """bring in watch_directory() function for argparse. signal handler except. 
+    create banner using logging.info Starting program and end program
+    """
     ns = create_parser().parse_args()
     # Hook into these two signals from the OS
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     # Now my signal_handler will get called if OS sends
     # either of these to my process.
-    print(Fore.GREEN+"#############################################################################")
+    print(Fore.GREEN+"#############################\
+        ################################################")
     print()
     logging.info("Starting program dirwatcher.py")
     print()
-    print("#############################################################################")
+    print("##############################################\
+        ###############################")
     while not exit_flag:
         try:
             watch_directory(ns.dir, ns.text, ns.ext, ns.int)
@@ -113,11 +119,13 @@ def main(args):
             # Log an ERROR level message here
             logger.error(e)
             pass
-    print(Fore.RED+"_______________________________________________________________________________")
+    print(Fore.RED+"_________________________________________\
+        ______________________________________")
     print()
     logging.info("GoodBye Stopped dirwatcher.py")
     print()
-    print("_______________________________________________________________________________")
+    print("______________________________________________________\
+        _________________________")
     # put a sleep inside my while loop so I don't peg the cpu usage at 100%
     time.sleep(ns.int)
 
